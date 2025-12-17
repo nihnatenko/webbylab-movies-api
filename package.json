@@ -1,0 +1,36 @@
+{
+  "name": "webbylab-movies-api",
+  "version": "1.0.0",
+  "description": "webbylab-movies-api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "format": "prettier --write \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nihnatenko/webbylab-movies-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nihnatenko/webbylab-movies-api/issues"
+  },
+  "homepage": "https://github.com/nihnatenko/webbylab-movies-api#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4"
+  }
+}

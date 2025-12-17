@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: Movies Management API
+  version: 1.0.0
+  description: RESTful API for managing a movie catalog. Built for the WebbyLab recruitment process.
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /users:
+    post:
+      tags: [Authentication]
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, example: "candidate@webbylab.com" }
+                password: { type: string, example: "securePassword123" }
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              example: { status: 1, token: "eyJhbGciOiJIUzI1..." }
+        400:
+          description: Email already exists or invalid data
+
+  /sessions:
+    post:
+      tags: [Authentication]
+      summary: Log in to get an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, example: "candidate@webbylab.com" }
+                password: { type: string, example: "securePassword123" }
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              example: { status: 1, token: "eyJhbGciOiJIUzI1..." }
+
+  /movies:
+    get:
+      tags: [Movies]
+      summary: List and search movies
+      description: Returns a list of movies. Supports filtering by title or actor name, and sorting.
+      parameters:
+        - name: title
+          in: query
+          schema: { type: string }
+          description: Filter by movie title
+        - name: actor
+          in: query
+          schema: { type: string }
+          description: Filter by actor name
+        - name: sort
+          in: query
+          schema: { type: string, enum: [title] }
+        - name: order
+          in: query
+          schema: { type: string, enum: [ASC, DESC], default: ASC }
+      responses:
+        200:
+          description: List of movies retrieved
+          content:
+            application/json:
+              example:
+                status: 1
+                data:
+                  - id: 1
+                    title: "Casablanca"
+                    releaseYear: 1942
+                    format: "DVD"
+                    actors: [{ name: "Humphrey Bogart" }]
+
+    post:
+      tags: [Movies]
+      security:
+        - bearerAuth: []
+      summary: Add a movie manually
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string, example: "Inception" }
+                releaseYear: { type: integer, example: 2010 }
+                format: { type: string, enum: [VHS, DVD, Blu-ray] }
+                stars: { type: array, items: { type: string }, example: ["Leonardo DiCaprio"] }
+      responses:
+        201:
+          description: Movie added
+
+  /movies/import:
+    post:
+      tags: [Import]
+      security:
+        - bearerAuth: []
+      summary: Import movies from a .txt file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                movies: { type: string, format: binary }
+      responses:
+        200:
+          description: Import completed
+          content:
+            application/json:
+              example: { status: 1, data: { imported: 24 } }
