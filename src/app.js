@@ -6,6 +6,7 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 const { initDB } = require('./models');
 const authRoutes = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
+const importRoutes = require('./routes/importRoutes');
 
 const app = express();
 const port = process.env.APP_PORT || 8000;
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/v1', authRoutes);
 app.use('/api/v1/movies', movieRoutes);
+app.use('/api/v1/movies', importRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
