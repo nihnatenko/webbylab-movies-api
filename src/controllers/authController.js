@@ -28,12 +28,13 @@ exports.users = async (req, res) => {
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) return res.status(400).json({ status: 0, error: 'USER_EXISTS' });
 
-    const hashedPassword = await bcrypt.hash(password, process.env.SALT);
+    const hashedPassword = await bcrypt.hash(password,10);
     const user = await User.create({ email, password: hashedPassword });
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(201).json({ status: 1, token });
   } catch (error) {
+    console.error('Auth Error Details:', error);
     res.status(500).json({ status: 0, error: error.message });
   }
 };
